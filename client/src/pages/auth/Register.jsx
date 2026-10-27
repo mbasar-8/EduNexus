@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/images/edunexus-logo.png";
-
 import { useNavigate } from "react-router-dom";
 
 function Register() {
@@ -25,6 +24,8 @@ function Register() {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -98,8 +99,12 @@ function Register() {
         },
       );
 
-      console.log(response.data);
-      navigate("/login");
+      setSuccessMessage(
+        "Account created successfully. Please sign in with your new account.",
+      );
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
       if (error.response?.data?.errors) {
         const validationErrors = error.response.data.errors;
@@ -129,15 +134,23 @@ function Register() {
             className="h-24 w-24 object-contain"
           />
         </div>
-
         {/* Heading */}
         <h1 className="text-center text-3xl font-bold text-gray-500">
           EduNexus
         </h1>
-
         <p className="mt-2 text-center text-gray-500">
           Create Your EduNexus Account
         </p>
+
+        {/* Success message */}
+
+        {successMessage && (
+          <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-center">
+            <p className="text-sm font-medium text-green-700">
+              {successMessage}
+            </p>
+          </div>
+        )}
 
         {/* Register form */}
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
@@ -150,6 +163,7 @@ function Register() {
               type="text"
               placeholder="Enter your full name"
               value={name}
+              disabled={!!successMessage}
               onChange={(event) =>
                 handleInputChange("name", event.target.value)
               }
@@ -172,6 +186,7 @@ function Register() {
               type="email"
               placeholder="Enter your email"
               value={email}
+              disabled={!!successMessage}
               onChange={(event) =>
                 handleInputChange("email", event.target.value)
               }
@@ -196,6 +211,7 @@ function Register() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
+                  disabled={!!successMessage}
                   onChange={(event) =>
                     handleInputChange("password", event.target.value)
                   }
@@ -231,6 +247,7 @@ function Register() {
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Re-enter your password"
                   value={confirmPassword}
+                  disabled={!!successMessage}
                   onChange={(event) =>
                     handleInputChange("confirmPassword", event.target.value)
                   }
@@ -269,13 +286,12 @@ function Register() {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !!successMessage}
             className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isLoading ? "Creating Account..." : "Create Account"}
+            {isLoading ? "Registered..." : "Register"}
           </button>
         </form>
-
         <footer>
           <div className="mt-8 border-t border-gray-200 pt-6 text-center">
             <p className="text-sm text-gray-500">

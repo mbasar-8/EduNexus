@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/images/edunexus-logo.png";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,6 +18,8 @@ function Login() {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleInputChange = (field, value) => {
     if (field === "email") {
@@ -68,9 +71,27 @@ function Login() {
         },
       );
 
-      console.log(response.data);
+      localStorage.setItem("token", response.data.token);
+
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      navigate("/dashboard");
     } catch (error) {
-      console.log(error.response?.data || error.message);
+      if (error.response?.data?.errors) {
+        const validationErrors = error.response.data.errors;
+
+        setErrors({
+          email: validationErrors.email?.[0] || "",
+          password: validationErrors.password?.[0] || "",
+        });
+      } else if (error.response?.data?.message) {
+        setErrors({
+          email: "",
+          password: error.response.data.message,
+        });
+      } else {
+        console.log(error.response?.data || error.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -108,6 +129,7 @@ function Login() {
               type="email"
               placeholder="Enter your email"
               value={email}
+              disabled={isLoading}
               onChange={(event) =>
                 handleInputChange("email", event.target.value)
               }
@@ -132,6 +154,7 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={password}
+                  disabled={isLoading}
                   onChange={(event) =>
                     handleInputChange("password", event.target.value)
                   }
@@ -142,6 +165,7 @@ function Login() {
 
                 <button
                   type="button"
+                  disabled={isLoading}
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
                   aria-label={showPassword ? "Hide password" : "Show password"}
