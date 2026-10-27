@@ -1,8 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Dashboard from "./pages/dashboard/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Dashboard from "./pages/dashboard/Dashboard";
+import Students from "./pages/students/Students";
+import Teachers from "./pages/teachers/Teachers";
+import Departments from "./pages/departments/Departments";
 
 function App() {
   return (
@@ -15,6 +18,33 @@ function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/students"
+        element={
+          <ProtectedRoute>
+            <Students />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/teachers"
+        element={
+          <ProtectedRoute>
+            <Teachers />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/departments"
+        element={
+          <ProtectedRoute>
+            <Departments />
           </ProtectedRoute>
         }
       />

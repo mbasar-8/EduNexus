@@ -1,3 +1,5 @@
+import DashboardLayout from "../../layouts/DashboardLayout";
+
 function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -6,11 +8,11 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <DashboardLayout>
       <h1 className="text-4xl font-bold text-blue-600">
         Welcome, {user.name} 👋
       </h1>
-    </div>
+    </DashboardLayout>
   );
 }
 
