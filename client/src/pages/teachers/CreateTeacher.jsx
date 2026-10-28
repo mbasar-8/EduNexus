@@ -13,6 +13,8 @@ function CreateTeacher() {
     status: "Active",
   });
 
+  const [departments, setDepartments] = useState([]);
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -50,13 +52,30 @@ function CreateTeacher() {
     }
   };
 
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/departments`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      setDepartments(response.data.departments);
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
   useEffect(() => {
-    if (!id) return;
+    fetchDepartments();
 
-    console.log("Edit Mode");
-    fetchTeacher();
+    if (id) {
+      fetchTeacher();
+    }
   }, [id]);
-
   const fetchTeacher = async () => {
     try {
       const response = await axios.get(
@@ -165,9 +184,12 @@ function CreateTeacher() {
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-600"
               >
                 <option value="">Select Department</option>
-                <option value="Science">Science</option>
-                <option value="Commerce">Commerce</option>
-                <option value="Arts">Arts</option>
+
+                {departments.map((department) => (
+                  <option key={department.id} value={department.name}>
+                    {department.name}
+                  </option>
+                ))}
               </select>
             </div>
 
