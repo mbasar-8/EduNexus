@@ -34,6 +34,41 @@ function Students() {
     }
   };
 
+  const editStudent = (id) => {
+    navigate(`/students/${id}/edit`);
+  };
+
+  const deleteStudent = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this student?",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/students/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      fetchStudents();
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
+  const filteredStudents = students.filter((student) => {
+    return (
+      student.name.toLowerCase().includes(search.toLowerCase()) ||
+      student.email.toLowerCase().includes(search.toLowerCase()) ||
+      student.department.toLowerCase().includes(search.toLowerCase())
+    );
+  });
+
   return (
     <DashboardLayout>
       <PageHeader
@@ -46,7 +81,11 @@ function Students() {
         onButtonClick={() => navigate("/students/create")}
       />
 
-      <StudentTable students={students} />
+      <StudentTable
+        students={filteredStudents}
+        onDelete={deleteStudent}
+        onEdit={editStudent}
+      />
     </DashboardLayout>
   );
 }

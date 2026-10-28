@@ -36,4 +36,39 @@ class StudentController extends Controller
             'student' => $student,
         ], 201);
     }
+
+    public function show(Student $student)
+    {
+        return response()->json([
+            'student' => $student,
+        ]);
+    }
+
+    public function update(Request $request, Student $student)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:students,email,' . $student->id,
+            'phone' => 'nullable|string|max:20',
+            'department' => 'required|string',
+            'gender' => 'required|string',
+            'status' => 'required|string',
+        ]);
+
+        $student->update($validated);
+
+        return response()->json([
+            'message' => 'Student updated successfully.',
+            'student' => $student,
+        ]);
+    }
+
+    public function destroy(Student $student)
+    {
+        $student->delete();
+
+        return response()->json([
+            'message' => 'Student deleted successfully.',
+        ]);
+    }
 }

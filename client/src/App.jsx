@@ -58,6 +58,15 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/students/:id/edit"
+        element={
+          <ProtectedRoute>
+            <CreateStudent />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

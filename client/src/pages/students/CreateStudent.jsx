@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../../layouts/DashboardLayout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CreateStudent() {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ function CreateStudent() {
   });
 
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const handleInputChange = (field, value) => {
     setFormData((previousData) => ({
@@ -26,9 +27,40 @@ function CreateStudent() {
     event.preventDefault();
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/students`,
-        formData,
+      const url = id
+        ? `${import.meta.env.VITE_API_BASE_URL}/students/${id}`
+        : `${import.meta.env.VITE_API_BASE_URL}/students`;
+
+      const method = id ? "put" : "post";
+
+      const response = await axios({
+        method,
+        url,
+        data: formData,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      console.log(response.data);
+
+      navigate("/students");
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!id) return;
+
+    console.log("Edit Mode");
+    fetchStudent();
+  }, [id]);
+
+  const fetchStudent = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/students/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -38,7 +70,7 @@ function CreateStudent() {
 
       console.log(response.data);
 
-      navigate("/students");
+      setFormData(response.data.student);
     } catch (error) {
       console.error(error.response?.data || error.message);
     }
@@ -46,9 +78,13 @@ function CreateStudent() {
   return (
     <DashboardLayout>
       <div className="mx-auto max-w-3xl">
-        <h1 className="text-3xl font-bold text-slate-800">Add Student</h1>
+        <h1 className="text-3xl font-bold text-slate-800">
+          {id ? "Edit Student" : "Add Student"}
+        </h1>
 
-        <p className="mt-2 text-gray-500">Create a new student.</p>
+        <p className="mt-2 text-gray-500">
+          {id ? "Update student information." : "Create a new student."}
+        </p>
 
         <div className="mt-8 rounded-xl bg-white p-8 shadow-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
@@ -193,6 +229,7 @@ function CreateStudent() {
             <div className="flex justify-end gap-4 border-t border-gray-200 pt-6">
               <button
                 type="button"
+                onClick={() => navigate("/students")}
                 className="rounded-lg border border-gray-300 px-6 py-3 font-medium text-gray-700 transition hover:bg-gray-100"
               >
                 Cancel
@@ -202,7 +239,7 @@ function CreateStudent() {
                 type="submit"
                 className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
               >
-                Save Student
+                {id ? "Update Student" : "Save Student"}
               </button>
             </div>
           </form>

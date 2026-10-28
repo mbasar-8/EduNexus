@@ -1,4 +1,4 @@
-function StudentTable({ students }) {
+function StudentTable({ students, onDelete, onEdit }) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
       <table className="w-full">
@@ -33,7 +33,21 @@ function StudentTable({ students }) {
 
                 <td className="px-6 py-4">{student.status}</td>
 
-                <td className="px-6 py-4">Edit | Delete</td>
+                <td className="px-6 py-4 flex gap-3">
+                  <button
+                    onClick={() => onEdit(student.id)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => onDelete(student.id)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))
           )}
