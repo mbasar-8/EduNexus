@@ -8,6 +8,16 @@ use App\Models\Student;
 
 class StudentController extends Controller
 {
+
+    public function index()
+    {
+        $students = Student::latest()->get();
+
+        return response()->json([
+            'students' => $students,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([

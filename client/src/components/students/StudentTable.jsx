@@ -1,4 +1,4 @@
-function StudentTable() {
+function StudentTable({ students }) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
       <table className="w-full">
@@ -14,11 +14,29 @@ function StudentTable() {
         </thead>
 
         <tbody>
-          <tr>
-            <td colSpan={6} className="px-6 py-10 text-center text-gray-500">
-              No students found.
-            </td>
-          </tr>
+          {students.length === 0 ? (
+            <tr>
+              <td colSpan={6} className="px-6 py-10 text-center text-gray-500">
+                No students found.
+              </td>
+            </tr>
+          ) : (
+            students.map((student) => (
+              <tr key={student.id} className="border-t">
+                <td className="px-6 py-4">{student.id}</td>
+
+                <td className="px-6 py-4">{student.name}</td>
+
+                <td className="px-6 py-4">{student.email}</td>
+
+                <td className="px-6 py-4">{student.department}</td>
+
+                <td className="px-6 py-4">{student.status}</td>
+
+                <td className="px-6 py-4">Edit | Delete</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

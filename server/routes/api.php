@@ -20,4 +20,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/students', [StudentController::class, 'store']);
+
+    Route::get('/students', [StudentController::class, 'index']);
 });
