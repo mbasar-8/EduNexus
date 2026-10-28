@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\CourseController;
 
 Route::get('/health', function () {
     return response()->json([
@@ -47,4 +48,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/departments/{department}', [DepartmentController::class, 'show']);
     Route::put('/departments/{department}', [DepartmentController::class, 'update']);
     Route::delete('/departments/{department}', [DepartmentController::class, 'destroy']);
+
+
+    // courses module
+
+    Route::get('/courses', [CourseController::class, 'index']);
+    Route::post('/courses', [CourseController::class, 'store']);
+    Route::get('/courses/{course}', [CourseController::class, 'show']);
+    Route::put('/courses/{course}', [CourseController::class, 'update']);
+    Route::delete('/courses/{course}', [CourseController::class, 'destroy']);
 });

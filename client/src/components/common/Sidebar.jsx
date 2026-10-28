@@ -68,6 +68,19 @@ function Sidebar() {
           >
             Departments
           </NavLink>
+
+          <NavLink
+            to="/courses"
+            className={({ isActive }) =>
+              `block rounded-lg px-4 py-2 transition ${
+                isActive
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-300 hover:bg-slate-700"
+              }`
+            }
+          >
+            Courses
+          </NavLink>
         </nav>
         <button
           onClick={handleLogout}

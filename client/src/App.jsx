@@ -9,6 +9,8 @@ import Departments from "./pages/departments/Departments";
 import CreateStudent from "./pages/students/CreateStudent";
 import CreateTeacher from "./pages/teachers/CreateTeacher";
 import CreateDepartment from "./pages/departments/CreateDepartment";
+import Courses from "./pages/courses/Courses";
+import CreateCourse from "./pages/courses/CreateCourse";
 
 function App() {
   return (
@@ -102,6 +104,33 @@ function App() {
         element={
           <ProtectedRoute>
             <CreateDepartment />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/courses"
+        element={
+          <ProtectedRoute>
+            <Courses />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/courses/create"
+        element={
+          <ProtectedRoute>
+            <CreateCourse />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/courses/:id/edit"
+        element={
+          <ProtectedRoute>
+            <CreateCourse />
           </ProtectedRoute>
         }
       />
