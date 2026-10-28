@@ -7,6 +7,7 @@ import Students from "./pages/students/Students";
 import Teachers from "./pages/teachers/Teachers";
 import Departments from "./pages/departments/Departments";
 import CreateStudent from "./pages/students/CreateStudent";
+import CreateTeacher from "./pages/teachers/CreateTeacher";
 
 function App() {
   return (
@@ -64,6 +65,24 @@ function App() {
         element={
           <ProtectedRoute>
             <CreateStudent />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/teachers/create"
+        element={
+          <ProtectedRoute>
+            <CreateTeacher />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/teachers/:id/edit"
+        element={
+          <ProtectedRoute>
+            <CreateTeacher />
           </ProtectedRoute>
         }
       />
