@@ -6,6 +6,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Students from "./pages/students/Students";
 import Teachers from "./pages/teachers/Teachers";
 import Departments from "./pages/departments/Departments";
+import CreateStudent from "./pages/students/CreateStudent";
 
 function App() {
   return (
@@ -45,6 +46,15 @@ function App() {
         element={
           <ProtectedRoute>
             <Departments />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/students/create"
+        element={
+          <ProtectedRoute>
+            <CreateStudent />
           </ProtectedRoute>
         }
       />

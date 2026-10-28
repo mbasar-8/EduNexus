@@ -1,9 +1,27 @@
+import { useState } from "react";
+
 import DashboardLayout from "../../layouts/DashboardLayout";
+import PageHeader from "../../components/ui/PageHeader";
+import StudentTable from "../../components/students/StudentTable";
+
+import { useNavigate } from "react-router-dom";
 
 function Students() {
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
   return (
     <DashboardLayout>
-      <h1 className="text-4xl font-bold text-blue-600">Students Page</h1>
+      <PageHeader
+        title="Students"
+        description="Manage all students in your organization."
+        buttonText="+ Add Student"
+        searchPlaceholder="Search students..."
+        searchValue={search}
+        onSearchChange={setSearch}
+        onButtonClick={() => navigate("/students/create")}
+      />
+
+      <StudentTable />
     </DashboardLayout>
   );
 }
