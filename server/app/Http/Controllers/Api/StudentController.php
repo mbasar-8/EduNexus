@@ -71,4 +71,13 @@ class StudentController extends Controller
             'message' => 'Student deleted successfully.',
         ]);
     }
+
+    public function statistics()
+    {
+        return response()->json([
+            'total_students' => Student::count(),
+            'active_students' => Student::where('status', 'Active')->count(),
+            'inactive_students' => Student::where('status', 'Inactive')->count(),
+        ]);
+    }
 }
