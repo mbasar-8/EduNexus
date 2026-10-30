@@ -1,50 +1,36 @@
 import axios from "axios";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
 import logo from "../../assets/images/edunexus-logo.png";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
-
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [name, setName] = useState("");
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const currentYear = new Date().getFullYear();
-
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [successMessage, setSuccessMessage] = useState("");
-
-  const navigate = useNavigate();
-
   const handleInputChange = (field, value) => {
-    if (field === "name") {
-      setName(value);
-    }
+    const setters = {
+      name: setName,
+      email: setEmail,
+      password: setPassword,
+      confirmPassword: setConfirmPassword,
+    };
 
-    if (field === "email") {
-      setEmail(value);
-    }
-
-    if (field === "password") {
-      setPassword(value);
-    }
-
-    if (field === "confirmPassword") {
-      setConfirmPassword(value);
-    }
+    setters[field](value);
 
     if (errors[field]) {
       setErrors((previousErrors) => ({
@@ -83,25 +69,22 @@ function Register() {
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length > 0) {
-      return;
-    }
+    if (Object.keys(newErrors).length > 0) return;
 
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/register`,
-        {
-          name,
-          email,
-          password,
-          password_confirmation: confirmPassword,
-        },
-      );
+
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register`, {
+        name,
+        email,
+        password,
+        password_confirmation: confirmPassword,
+      });
 
       setSuccessMessage(
         "Account created successfully. Please sign in with your new account.",
       );
+
       setTimeout(() => {
         navigate("/login");
       }, 2000);
@@ -115,192 +98,263 @@ function Register() {
           password: validationErrors.password?.[0] || "",
           confirmPassword: validationErrors.password_confirmation?.[0] || "",
         });
+      } else if (error.response?.data?.message) {
+        setErrors({
+          email: error.response.data.message,
+        });
       } else {
-        console.log(error.response?.data || error.message);
+        console.error(error.response?.data || error.message);
       }
     } finally {
       setIsLoading(false);
     }
   };
 
+  const inputClass = (field) =>
+    `w-full rounded-xl border bg-gray-50 py-3 pl-11 pr-12 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-blue-100 ${
+      errors[field]
+        ? "border-red-400 focus:border-red-500"
+        : "border-gray-200 focus:border-blue-500"
+    }`;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        {/* Logo */}
-        <div className="mb-6 flex justify-center">
-          <img
-            src={logo}
-            alt="EduNexus Logo"
-            className="h-24 w-24 object-contain"
-          />
-        </div>
-        {/* Heading */}
-        <h1 className="text-center text-3xl font-bold text-gray-500">
-          EduNexus
-        </h1>
-        <p className="mt-2 text-center text-gray-500">
-          Create Your EduNexus Account
-        </p>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-gray-50 to-indigo-100 px-4 py-10">
+      <div className="w-full max-w-md">
+        {/* Register Card */}
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+          {/* Logo */}
+          <div className="mb-5 flex justify-center">
+            <img
+              src={logo}
+              alt="EduNexus Logo"
+              className="h-20 w-20 object-contain sm:h-24 sm:w-24"
+            />
+          </div>
 
-        {/* Success message */}
+          {/* Heading */}
+          <div className="text-center">
+            <h1 className="text-3xl font-bold tracking-tight text-slate-800">
+              EduNexus
+            </h1>
 
-        {successMessage && (
-          <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-center">
-            <p className="text-sm font-medium text-green-700">
-              {successMessage}
+            <p className="mt-2 text-sm text-gray-500">
+              Create your EduNexus account
             </p>
           </div>
-        )}
 
-        {/* Register form */}
-        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
+          {/* Success Message */}
+          {successMessage && (
+            <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-4 text-center">
+              <p className="text-sm font-medium text-green-700">
+                {successMessage}
+              </p>
+              <p className="mt-1 text-xs text-green-600">
+                Redirecting to login page...
+              </p>
+            </div>
+          )}
 
-            <input
-              type="text"
-              placeholder="Enter your full name"
-              value={name}
-              disabled={!!successMessage}
-              onChange={(event) =>
-                handleInputChange("name", event.target.value)
-              }
-              className={`w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-600 ${
-                errors.name ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Email Address
-            </label>
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              disabled={!!successMessage}
-              onChange={(event) =>
-                handleInputChange("email", event.target.value)
-              }
-              className={`w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-600 ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Password
-            </label>
-
+          {/* Register Form */}
+          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+            {/* Full Name */}
             <div>
+              <label
+                htmlFor="name"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                Full Name
+                <span className="ml-1 text-red-500">*</span>
+              </label>
+
               <div className="relative">
+                <User
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
                 <input
+                  id="name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={name}
+                  disabled={isLoading || !!successMessage}
+                  onChange={(event) =>
+                    handleInputChange("name", event.target.value)
+                  }
+                  className={inputClass("name")}
+                />
+              </div>
+
+              {errors.name && (
+                <p className="mt-1.5 text-xs text-red-600">{errors.name}</p>
+              )}
+            </div>
+
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                Email Address
+                <span className="ml-1 text-red-500">*</span>
+              </label>
+
+              <div className="relative">
+                <Mail
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  disabled={isLoading || !!successMessage}
+                  onChange={(event) =>
+                    handleInputChange("email", event.target.value)
+                  }
+                  className={inputClass("email")}
+                />
+              </div>
+
+              {errors.email && (
+                <p className="mt-1.5 text-xs text-red-600">{errors.email}</p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                Password
+                <span className="ml-1 text-red-500">*</span>
+              </label>
+
+              <div className="relative">
+                <Lock
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
+                <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
                   value={password}
-                  disabled={!!successMessage}
+                  disabled={isLoading || !!successMessage}
                   onChange={(event) =>
                     handleInputChange("password", event.target.value)
                   }
-                  className={`w-full rounded-lg border px-4 py-3 pr-12 outline-none focus:border-blue-600 ${
-                    errors.password ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={inputClass("password")}
                 />
 
                 <button
                   type="button"
+                  disabled={isLoading || !!successMessage}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-blue-600"
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  title={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
                 </button>
               </div>
+
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <p className="mt-1.5 text-xs text-red-600">{errors.password}</p>
               )}
+
+              <p className="mt-1.5 text-xs text-gray-400">
+                Password must contain at least 8 characters.
+              </p>
             </div>
-          </div>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Confirm Password
-            </label>
-
+            {/* Confirm Password */}
             <div>
+              <label
+                htmlFor="confirmPassword"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                Confirm Password
+                <span className="ml-1 text-red-500">*</span>
+              </label>
+
               <div className="relative">
+                <Lock
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
                 <input
+                  id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Re-enter your password"
                   value={confirmPassword}
-                  disabled={!!successMessage}
+                  disabled={isLoading || !!successMessage}
                   onChange={(event) =>
                     handleInputChange("confirmPassword", event.target.value)
                   }
-                  className={`w-full rounded-lg border px-4 py-3 pr-12 outline-none focus:border-blue-600 ${
-                    errors.confirmPassword
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
+                  className={inputClass("confirmPassword")}
                 />
 
                 <button
                   type="button"
+                  disabled={isLoading || !!successMessage}
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-blue-600"
                   aria-label={
-                    showConfirmPassword ? "Hide password" : "Show password"
-                  }
-                  title={
                     showConfirmPassword ? "Hide password" : "Show password"
                   }
                 >
                   {showConfirmPassword ? (
-                    <EyeOff size={20} />
+                    <EyeOff size={19} />
                   ) : (
-                    <Eye size={20} />
+                    <Eye size={19} />
                   )}
                 </button>
               </div>
+
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-1.5 text-xs text-red-600">
                   {errors.confirmPassword}
                 </p>
               )}
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={isLoading || !!successMessage}
-            className="w-full rounded-lg bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isLoading ? "Registered..." : "Register"}
-          </button>
-        </form>
-        <footer>
-          <div className="mt-8 border-t border-gray-200 pt-6 text-center">
-            <p className="text-sm text-gray-500">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading || !!successMessage}
+              className="w-full rounded-xl bg-blue-600 py-3.5 font-semibold text-white shadow-lg shadow-blue-200 transition duration-200 hover:bg-blue-700 hover:shadow-blue-300 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isLoading ? "Creating Account..." : "Create Account"}
+            </button>
+
+            {/* Login Link */}
+            <p className="pt-2 text-center text-sm text-gray-600">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/login")}
+                className="font-semibold text-blue-600 transition hover:text-blue-800 hover:underline"
+              >
+                Sign In
+              </button>
+            </p>
+          </form>
+
+          {/* Footer */}
+          <footer className="mt-8 border-t border-gray-100 pt-6 text-center">
+            <p className="text-xs text-gray-500">
               © {currentYear} EduNexus. All rights reserved.
             </p>
 
             <p className="mt-2 text-xs text-gray-400">Version 1.0.0</p>
-          </div>
-        </footer>
+          </footer>
+        </div>
       </div>
     </div>
   );

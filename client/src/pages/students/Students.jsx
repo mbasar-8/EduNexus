@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import PageHeader from "../../components/ui/PageHeader";
 import StudentTable from "../../components/students/StudentTable";
 
-import { useNavigate } from "react-router-dom";
-
 function Students() {
   const [students, setStudents] = useState([]);
   const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,8 +25,6 @@ function Students() {
           },
         },
       );
-
-      console.log(response.data);
 
       setStudents(response.data.students);
     } catch (error) {
@@ -62,30 +60,34 @@ function Students() {
   };
 
   const filteredStudents = students.filter((student) => {
+    const searchTerm = search.toLowerCase();
+
     return (
-      student.name.toLowerCase().includes(search.toLowerCase()) ||
-      student.email.toLowerCase().includes(search.toLowerCase()) ||
-      student.department.toLowerCase().includes(search.toLowerCase())
+      student.name?.toLowerCase().includes(searchTerm) ||
+      student.email?.toLowerCase().includes(searchTerm) ||
+      student.department?.toLowerCase().includes(searchTerm)
     );
   });
 
   return (
     <DashboardLayout>
-      <PageHeader
-        title="Students"
-        description="Manage all students in your organization."
-        buttonText="+ Add Student"
-        searchPlaceholder="Search students..."
-        searchValue={search}
-        onSearchChange={setSearch}
-        onButtonClick={() => navigate("/students/create")}
-      />
+      <div className="space-y-6">
+        <PageHeader
+          title="Students"
+          description="Manage and monitor all students in your organization."
+          buttonText="Add Student"
+          searchPlaceholder="Search students..."
+          searchValue={search}
+          onSearchChange={setSearch}
+          onButtonClick={() => navigate("/students/create")}
+        />
 
-      <StudentTable
-        students={filteredStudents}
-        onDelete={deleteStudent}
-        onEdit={editStudent}
-      />
+        <StudentTable
+          students={filteredStudents}
+          onDelete={deleteStudent}
+          onEdit={editStudent}
+        />
+      </div>
     </DashboardLayout>
   );
 }

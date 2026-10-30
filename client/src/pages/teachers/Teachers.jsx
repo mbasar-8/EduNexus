@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import PageHeader from "../../components/ui/PageHeader";
 import TeacherTable from "../../components/teachers/TeacherTable";
 
-import { useNavigate } from "react-router-dom";
-
 function Teachers() {
   const [teachers, setTeachers] = useState([]);
   const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,8 +25,6 @@ function Teachers() {
           },
         },
       );
-
-      console.log(response.data);
 
       setTeachers(response.data.teachers);
     } catch (error) {
@@ -62,30 +60,34 @@ function Teachers() {
   };
 
   const filteredTeachers = teachers.filter((teacher) => {
+    const searchTerm = search.toLowerCase();
+
     return (
-      teacher.name.toLowerCase().includes(search.toLowerCase()) ||
-      teacher.email.toLowerCase().includes(search.toLowerCase()) ||
-      teacher.department.toLowerCase().includes(search.toLowerCase())
+      teacher.name?.toLowerCase().includes(searchTerm) ||
+      teacher.email?.toLowerCase().includes(searchTerm) ||
+      teacher.department?.toLowerCase().includes(searchTerm)
     );
   });
 
   return (
     <DashboardLayout>
-      <PageHeader
-        title="Teachers"
-        description="Manage all teachers in your organization."
-        buttonText="+ Add Teacher"
-        searchPlaceholder="Search teachers..."
-        searchValue={search}
-        onSearchChange={setSearch}
-        onButtonClick={() => navigate("/teachers/create")}
-      />
+      <div className="space-y-6">
+        <PageHeader
+          title="Teachers"
+          description="Manage and monitor all teachers in your organization."
+          buttonText="Add Teacher"
+          searchPlaceholder="Search teachers..."
+          searchValue={search}
+          onSearchChange={setSearch}
+          onButtonClick={() => navigate("/teachers/create")}
+        />
 
-      <TeacherTable
-        teachers={filteredTeachers}
-        onDelete={deleteTeacher}
-        onEdit={editTeacher}
-      />
+        <TeacherTable
+          teachers={filteredTeachers}
+          onDelete={deleteTeacher}
+          onEdit={editTeacher}
+        />
+      </div>
     </DashboardLayout>
   );
 }
