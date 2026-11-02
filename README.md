@@ -1,77 +1,251 @@
 # EduNexus
 
-> Connecting Education, Simplifying Management.
+> **Connecting Education, Simplifying Management.**
 
-## 📖 About
+A modern **Full-Stack School Management System** built with **React, Laravel, MySQL, and Tailwind CSS**.
 
-EduNexus is a modern full-stack School Management Platform built with React, Laravel, MySQL, and Tailwind CSS.
-
-The goal of this project is to build a portfolio-quality application while following professional software development practices such as clean architecture, Git workflow, documentation, and feature-driven development.
+EduNexus is designed as a portfolio-quality project that demonstrates professional full-stack web development, clean architecture, RESTful API integration, responsive UI design, and real-world CRUD operations.
 
 ---
 
-## 🚀 Tech Stack
+# 📖 Overview
 
-### Frontend
+EduNexus helps educational institutions manage their core academic resources through a clean, modern, and responsive web application.
+
+The project focuses not only on building features but also on following professional software development practices including:
+
+- Clean project architecture
+- REST API development
+- Git & GitHub workflow
+- Documentation
+- Version planning
+- Feature-driven development
+- Responsive UI/UX
+
+---
+
+# ✨ Features (Version 1.0.0)
+
+## Authentication
+
+- Secure Login
+- User Registration
+- Protected Routes
+- Logout
+
+## Student Management
+
+- Create Student
+- View Students
+- Edit Student
+- Delete Student
+- Dynamic Department Selection
+
+## Teacher Management
+
+- Create Teacher
+- View Teachers
+- Edit Teacher
+- Delete Teacher
+
+## Department Management
+
+- Create Department
+- View Departments
+- Edit Department
+- Delete Department
+
+## Course Management
+
+- Create Course
+- View Courses
+- Edit Course
+- Delete Course
+
+## User Experience
+
+- Responsive Layout
+- Professional Dashboard
+- Form Validation
+- REST API Integration
+- Clean Navigation
+- Responsive Sidebar
+- Mobile Friendly Interface
+
+---
+
+# 🚀 Tech Stack
+
+## Frontend
 
 - React (Vite)
+- React Router
+- Axios
 - Tailwind CSS
 
-### Backend
+## Backend
 
-- Laravel 12 (REST API)
+- Laravel 12
+- RESTful API
 
-### Database
+## Database
 
 - MySQL
 
-### Version Control
+## Version Control
 
-- Git & GitHub
+- Git
+- GitHub
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
-EduNexus/
-├── client/
-├── server/
+```text
+EduNexus
+│
+├── client/                 # React Application
+├── server/                 # Laravel REST API
 ├── docs/
+│   ├── demo/
+│   └── screenshots/
+│
 ├── README.md
 └── LICENSE
+```
 
 ---
 
-## 🛠️ Development Status
+# 📸 Screenshots
 
-Current Sprint:
-
-- Sprint 0 — Project Foundation
-
-Current Task:
-
-- Project Documentation
-
-Project Status:
-
-- 🟡 In Development
-
----
-
-## 📅 Roadmap
-
-- [ ] Sprint 0 – Project Setup
-- [ ] Sprint 1 – Authentication
-- [ ] Sprint 2 – Student Management
-- [ ] Sprint 3 – Teacher Management
-- [ ] Sprint 4 – Department Management
-- [ ] Sprint 5 – Course Management
-- [ ] Sprint 6 – Enrollment System
-- [ ] Sprint 7 – Attendance System
-- [ ] Sprint 8 – Reports & Final Polish
+| Page           | Preview                                  |
+| -------------- | ---------------------------------------- |
+| Login          | ![](docs/screenshots/01-login.png)       |
+| Register       | ![](docs/screenshots/02-register.png)    |
+| Dashboard      | ![](docs/screenshots/03-dashboard.png)   |
+| Students       | ![](docs/screenshots/04-students.png)    |
+| Add Student    | ![](docs/screenshots/05-addStudent.png)  |
+| Edit Student   | ![](docs/screenshots/06-editStudent.png) |
+| Student Update | ![](docs/screenshots/07-editStudent.png) |
+| Teachers       | ![](docs/screenshots/08-teachers.png)    |
+| Departments    | ![](docs/screenshots/09-departments.png) |
+| Courses        | ![](docs/screenshots/10-courses.png)     |
 
 ---
 
-## 👨‍💻 Author
+# 🎥 Demo
 
-Developed by Mominul Basar.
+Project demonstration video:
+
+**📹 EduNexus v1.0.0**
+
+Location:
+
+```text
+docs/demo/EduNexus-v1.0.0.mp4
+```
+
+---
+
+# ⚙️ Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/mbasar-8/EduNexus.git
+```
+
+## Frontend
+
+```bash
+cd client
+
+npm install
+
+npm run dev
+```
+
+## Backend
+
+```bash
+cd server
+
+composer install
+
+cp .env.example .env
+
+php artisan key:generate
+```
+
+Configure your MySQL database inside the `.env` file.
+
+Run database migrations:
+
+```bash
+php artisan migrate
+```
+
+Start Laravel server:
+
+```bash
+php artisan serve
+```
+
+---
+
+# 📦 Version History
+
+## ✅ Version 1.0.0
+
+Completed Modules
+
+- Authentication
+- Student Management
+- Teacher Management
+- Department Management
+- Course Management
+- Responsive UI
+- Responsive Sidebar
+- REST API Integration
+- Professional Dashboard
+- Form Validation
+
+Project Status
+
+> ✅ Stable Release
+
+---
+
+# 🚀 Planned for Version 2
+
+The following modules are planned for future development:
+
+- Student Enrollment System
+- Attendance Management
+- Role & Permission Management
+- Reports & Analytics
+- Profile Management
+- Notification System
+- Dashboard Statistics
+- Advanced Search & Filters
+- Export (PDF / Excel)
+
+---
+
+# 👨‍💻 Developer
+
+**Mominul Basar**
+
+GitHub:
+
+https://github.com/mbasar-8
+
+Project Repository:
+
+https://github.com/mbasar-8/EduNexus
+
+---
+
+# 📄 License
+
+This project is released under the MIT License.
